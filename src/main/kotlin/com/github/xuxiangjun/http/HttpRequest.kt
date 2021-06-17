@@ -9,6 +9,10 @@ open class HttpRequest(
     private val parameters: MutableMap<String, String> = mutableMapOf()
     val headers: MutableMap<String, String> = mutableMapOf()
 
+    var chunkLength = -1
+    var connectTimeout = -1
+    var readTimeout = -1
+
     fun addParameter(name: String, value: String) {
         this.parameters[name] = value
     }

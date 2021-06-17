@@ -9,7 +9,7 @@ object HttpHelper {
     private const val TAG = "HttpHelper"
 
     private const val CONNECT_TIMEOUT = 5000
-    private const val SO_TIMEOUT = 6000
+    private const val READ_TIMEOUT = 6000
 
     fun request(method: HttpMethod, request: HttpRequest): HttpResponse {
         return execute(request, method)
@@ -25,16 +25,28 @@ object HttpHelper {
             val connection = URL(url).openConnection() as HttpURLConnection
             conn = connection
             connection.requestMethod = method.name
-            connection.connectTimeout = CONNECT_TIMEOUT
-            connection.readTimeout = SO_TIMEOUT
+            connection.connectTimeout = if (request.connectTimeout > 0) {
+                request.connectTimeout
+            } else {
+                CONNECT_TIMEOUT
+            }
+            connection.readTimeout = if (request.readTimeout > 0) {
+                request.readTimeout
+            } else {
+                READ_TIMEOUT
+            }
             headers.forEach {
                 connection.setRequestProperty(it.key, it.value)
             }
 
             val doOutput = body != null && body.isNotEmpty()
             if (doOutput) {
-                connection.setFixedLengthStreamingMode(body!!.size)
                 connection.doOutput = true
+                if (request.chunkLength >  0) {
+                    connection.setChunkedStreamingMode(request.chunkLength)
+                } else {
+                    connection.setFixedLengthStreamingMode(body!!.size)
+                }
             }
 
             connection.connect()

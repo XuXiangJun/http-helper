@@ -114,5 +114,23 @@ object HttpHeaders {
     const val XCorrelationId: String = "X-Correlation-ID"
     const val XTotalCount: String = "X-Total-Count"
 
+    const val ApplicationGZip = "application/gzip"
+    const val ApplicationJavaScript = "application/javascript"
     const val ApplicationJson = "application/json"
+    const val ApplicationOctetStream = "application/octet-stream"
+    const val ApplicationSoapXml = "application/soap+xml"
+    const val ApplicationXWWWFormUrlencoded = "application/x-www-form-urlencoded"
+    const val ApplicationXhtmlXml = "application/xhtml+xml"
+    const val ApplicationXml = "application/xml"
+    const val ApplicationZip = "application/zip"
+
+    const val TextCss = "text/css"
+    const val TextCsv = "text/csv"
+    const val TextHtml = "text/html"
+    const val TextPlain = "text/plain"
+    const val TextXml = "text/xml"
+
+    const val ImageGif = "image/gif"
+    const val ImageJpeg = "image/jpeg"
+    const val ImagePng = "image/png"
 }
