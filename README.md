@@ -1,5 +1,5 @@
 # http-helper
-A simple kotlin http client based on HttpUrlConnection
+A simple kotlin http client based on **java.net.HttpURLConnection**
 
 [![](https://jitpack.io/v/XuXiangJun/http-helper.svg)](https://jitpack.io/#XuXiangJun/http-helper)
 
