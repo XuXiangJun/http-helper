@@ -1,10 +1,12 @@
 package com.github.xuxiangjun.http
 
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
 object HttpHelper {
-    const val CODE_ERROR = 9000
+    const val CODE_IO_EXCEPTION = 9000
+    const val CODE_ERROR_OCCURRED = 9001
 
     private const val TAG = "HttpHelper"
 
@@ -13,6 +15,42 @@ object HttpHelper {
 
     fun request(method: HttpMethod, request: HttpRequest): HttpResponse {
         return execute(request, method)
+    }
+
+    fun get(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.GET)
+    }
+
+    fun head(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.HEAD)
+    }
+
+    fun post(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.POST)
+    }
+
+    fun put(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.PUT)
+    }
+
+    fun delete(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.DELETE)
+    }
+
+    fun trace(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.TRACE)
+    }
+
+    fun options(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.OPTIONS)
+    }
+
+    fun connect(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.CONNECT)
+    }
+
+    fun patch(request: HttpRequest): HttpResponse {
+        return execute(request, HttpMethod.PATCH)
     }
 
     private fun execute(request: HttpRequest, method: HttpMethod): HttpResponse {
@@ -67,51 +105,20 @@ object HttpHelper {
             return HttpResponse(code, message, respHeaders, content)
         } catch (e: Exception) {
             println("$TAG: execute() Catch Exception: ${e.localizedMessage}")
+            val errorCode = if (e is IOException) {
+                CODE_IO_EXCEPTION
+            } else {
+                CODE_ERROR_OCCURRED
+            }
             val errorBody = """
                 {
-                    "error_code":$CODE_ERROR,
+                    "error_code":$errorCode,
                     "description":"see Exception instance"
                 }
             """.trimIndent().toByteArray()
-            return HttpResponse(CODE_ERROR, "Error", emptyMap(), errorBody, e)
+            return HttpResponse(errorCode, "Error", emptyMap(), errorBody, e)
         } finally {
             conn?.disconnect()
         }
-    }
-
-    fun get(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.GET)
-    }
-
-    fun head(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.HEAD)
-    }
-
-    fun post(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.POST)
-    }
-
-    fun put(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.PUT)
-    }
-
-    fun delete(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.DELETE)
-    }
-
-    fun trace(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.TRACE)
-    }
-
-    fun options(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.OPTIONS)
-    }
-
-    fun connect(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.CONNECT)
-    }
-
-    fun patch(request: HttpRequest): HttpResponse {
-        return execute(request, HttpMethod.PATCH)
     }
 }
