@@ -13,7 +13,7 @@ A simple kotlin http client based on **java.net.HttpURLConnection**
 ```
 ```
     dependencies {
-            implementation 'com.github.XuXiangJun:http-helper:1.0.1'
+            implementation 'com.github.XuXiangJun:http-helper:1.1.2'
     }
 ```
 
