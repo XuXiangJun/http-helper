@@ -4,7 +4,7 @@ import java.net.URLEncoder
 
 open class HttpRequest(
     val url: String,
-    var body: ByteArray? = null
+    open var body: ByteArray? = null
 ) {
     private val parameters: MutableMap<String, String> = mutableMapOf()
     val headers: MutableMap<String, String> = mutableMapOf()

@@ -5,8 +5,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object HttpHelper {
-    const val CODE_IO_EXCEPTION = 9000
-    const val CODE_ERROR_OCCURRED = 9001
+    const val CODE_ERROR_OCCURRED = 10500
+    const val CODE_IO_EXCEPTION = 10600
 
     private const val TAG = "HttpHelper"
 
@@ -93,7 +93,7 @@ object HttpHelper {
             }
 
             val code = connection.responseCode
-            val message = connection.responseMessage
+            val message = connection.responseMessage ?: ""
             val respHeaders = connection.headerFields.filter {
                 it.key != null
             }.mapValues {
@@ -104,6 +104,7 @@ object HttpHelper {
             val content = input.readBytes()
             return HttpResponse(code, message, respHeaders, content)
         } catch (e: Exception) {
+            e.printStackTrace()
             println("$TAG: execute() Catch Exception: ${e.localizedMessage}")
             val errorCode = if (e is IOException) {
                 CODE_IO_EXCEPTION
