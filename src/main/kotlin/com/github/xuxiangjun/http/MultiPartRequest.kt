@@ -36,7 +36,6 @@ class MultiPartRequest(
                 }
                 output.write("\r\n".toByteArray())
 
-
                 // Write part data content
                 output.write(partData.content)
                 output.write("\r\n".toByteArray())

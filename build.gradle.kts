@@ -6,6 +6,11 @@ plugins {
 group = "com.github.xuxiangjun"
 version = "1.1.0"
 
+java {
+    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
