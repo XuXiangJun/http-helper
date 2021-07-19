@@ -42,7 +42,7 @@ class MultiPartRequest(
                 output.write("\r\n".toByteArray())
             }
 
-            output.writeBytes("--$boundary--\r\n".toByteArray())
+            output.write("--$boundary--\r\n".toByteArray())
 
             return output.toByteArray()
         }
