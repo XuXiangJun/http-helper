@@ -21,25 +21,25 @@ class MultiPartRequest(
 
             for (partData in partDataList) {
                 // Write disposition header
-                output.writeBytes("--$boundary\r\n".toByteArray())
-                output.writeBytes(
+                output.write("--$boundary\r\n".toByteArray())
+                output.write(
                     "${HttpHeaders.ContentDisposition}: form-data;name=${partData.name}".toByteArray()
                 )
                 partData.fileName?.also {
-                    output.writeBytes(";filename=$it".toByteArray())
+                    output.write(";filename=$it".toByteArray())
                 }
-                output.writeBytes("\r\n".toByteArray())
+                output.write("\r\n".toByteArray())
 
                 // Write part data headers
                 partData.headers.forEach { (k, v) ->
-                    output.writeBytes("$k: $v\r\n".toByteArray())
+                    output.write("$k: $v\r\n".toByteArray())
                 }
-                output.writeBytes("\r\n".toByteArray())
+                output.write("\r\n".toByteArray())
 
 
                 // Write part data content
-                output.writeBytes(partData.content)
-                output.writeBytes("\r\n".toByteArray())
+                output.write(partData.content)
+                output.write("\r\n".toByteArray())
             }
 
             output.writeBytes("--$boundary--\r\n".toByteArray())
