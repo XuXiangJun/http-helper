@@ -4,10 +4,10 @@ import java.net.URLEncoder
 
 open class HttpRequest(
     val url: String,
-    open var body: ByteArray? = null
-) {
+    override var body: ByteArray? = null
+) : HttpEntity() {
     private val parameters: MutableMap<String, String> = mutableMapOf()
-    val headers: MutableMap<String, String> = mutableMapOf()
+    override val headers: MutableMap<String, String> = mutableMapOf()
 
     var chunkLength = -1
     var connectTimeout = -1
