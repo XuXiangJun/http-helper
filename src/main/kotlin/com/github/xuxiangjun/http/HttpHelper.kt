@@ -17,40 +17,151 @@ object HttpHelper {
         return execute(request, method)
     }
 
+    fun request(
+        method: HttpMethod,
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return request(method, request)
+    }
+
     fun get(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.GET)
+    }
+
+    fun get(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return get(request)
     }
 
     fun head(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.HEAD)
     }
 
+    fun head(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return head(request)
+    }
+
     fun post(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.POST)
+    }
+
+    fun post(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return post(request)
     }
 
     fun put(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.PUT)
     }
 
+    fun put(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return put(request)
+    }
+
     fun delete(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.DELETE)
+    }
+
+    fun delete(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return delete(request)
     }
 
     fun trace(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.TRACE)
     }
 
+    fun trace(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return trace(request)
+    }
+
     fun options(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.OPTIONS)
+    }
+
+    fun options(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return options(request)
     }
 
     fun connect(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.CONNECT)
     }
 
+    fun connect(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return connect(request)
+    }
+
     fun patch(request: HttpRequest): HttpResponse {
         return execute(request, HttpMethod.PATCH)
+    }
+
+    fun patch(
+        url: String,
+        block: (HttpRequest.() -> Unit)? = null
+    ): HttpResponse {
+        val request = HttpRequest(url)
+        if (block != null) {
+            block(request)
+        }
+        return patch(request)
     }
 
     private fun execute(request: HttpRequest, method: HttpMethod): HttpResponse {
@@ -80,7 +191,7 @@ object HttpHelper {
             val doOutput = body != null && body.isNotEmpty()
             if (doOutput) {
                 connection.doOutput = true
-                if (request.chunkLength >  0) {
+                if (request.chunkLength > 0) {
                     connection.setChunkedStreamingMode(request.chunkLength)
                 } else {
                     connection.setFixedLengthStreamingMode(body!!.size)

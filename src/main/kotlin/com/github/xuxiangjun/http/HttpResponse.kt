@@ -7,8 +7,6 @@ open class HttpResponse(
     val body: ByteArray? = null,
     val error: Exception? = null
 ) {
-    val isSuccess = code in 200..299
-
     override fun toString(): String {
         return "code:$code, message:$message, headers:$headers, body size:${body?.size ?: 0}, error:${error?.localizedMessage}"
     }
