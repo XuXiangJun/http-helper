@@ -1,6 +1,8 @@
 package com.github.xuxiangjun.http
 
 import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -188,19 +190,33 @@ object HttpHelper {
                 connection.setRequestProperty(it.key, it.value)
             }
 
-            val doOutput = body != null && body.isNotEmpty()
+            val doOutput = if (request.inputStream != null) {
+                true
+            } else {
+                body != null && body.isNotEmpty()
+            }
+            val chunkLength = if (request.chunkLength > 0) {
+                request.chunkLength
+            } else if (request.inputStream != null) {
+                4096
+            } else {
+                -1
+            }
             if (doOutput) {
                 connection.doOutput = true
-                if (request.chunkLength > 0) {
-                    connection.setChunkedStreamingMode(request.chunkLength)
+                if (chunkLength > 0) {
+                    connection.setChunkedStreamingMode(chunkLength)
                 } else {
                     connection.setFixedLengthStreamingMode(body!!.size)
                 }
             }
-
             connection.connect()
             if (doOutput) {
-                connection.outputStream.write(body!!)
+                if (request.inputStream != null) {
+                    write(connection.outputStream, request.inputStream, chunkLength)
+                } else {
+                    connection.outputStream.write(body!!)
+                }
             }
 
             val code = connection.responseCode
@@ -231,6 +247,18 @@ object HttpHelper {
             return HttpResponse(errorCode, "Error", emptyMap(), errorBody, e)
         } finally {
             conn?.disconnect()
+        }
+    }
+
+    private fun write(output: OutputStream, input: InputStream, bufSize: Int) {
+        val buf = ByteArray(bufSize)
+        while (true) {
+            val read = input.read(buf)
+            if (read == -1) {
+                break
+            }
+
+            output.write(buf, 0, read)
         }
     }
 }

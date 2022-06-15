@@ -1,14 +1,24 @@
 plugins {
-    kotlin("jvm") version "1.5.31"
-    id("com.github.dcendents.android-maven") version "2.1"
+    kotlin("jvm") version "1.6.21"
+    id("maven-publish")
 }
 
-group = "com.github.xuxiangjun"
-version = "1.2.0"
+val kotlinVersion = "1.6.21"
+
+val libGroup = "com.github.XuXiangJun"
+val libVersion = "1.3.0"
+
+group = libGroup
+version = libVersion
 
 java {
     targetCompatibility = JavaVersion.VERSION_1_8
     sourceCompatibility = JavaVersion.VERSION_1_8
+}
+tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }
 
 repositories {
@@ -17,5 +27,17 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = libGroup
+            artifactId = "http-helper"
+            version = libVersion
+
+            from(components["java"])
+        }
+    }
 }
