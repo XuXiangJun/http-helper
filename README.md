@@ -23,10 +23,10 @@ A simple kotlin http client based on **java.net.HttpURLConnection**
 ```kotlin
 val url = "https://github.com/XuXiangJun"
 val request = HttpRequest(url)
-// Add query parameters
-request.addParameter("tab", "repositories")
-// Add http header
-request.addHeader("Accept-Charset", "utf-8")
+// Set url query parameters
+request.setParameter("tab", "repositories")
+// set http header
+request.setHeader("Accept-Charset", "utf-8")
 // Set http body
 request.body = ByteArray(0)
 ```
