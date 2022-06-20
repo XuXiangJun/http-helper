@@ -1,5 +1,8 @@
 package com.github.xuxiangjun.http
 
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 import java.nio.charset.Charset
 
 open class PartData(
@@ -8,7 +11,9 @@ open class PartData(
 ) {
     val headers: MutableMap<String, String> = mutableMapOf()
 
-    lateinit var content: ByteArray
+    var content: ByteArray? = null
+
+    var inputStream: InputStream? = null
 
     fun setHeader(name: String, value: String) {
         this.headers[name] = value
@@ -40,12 +45,21 @@ class StringPartData(
     }
 }
 
-class FilePartData(
-    name: String,
-    fileName: String,
-    fileData: ByteArray
-) : PartData(name, fileName) {
-    init {
+class FilePartData : PartData{
+
+    constructor(
+        name: String,
+        fileData: ByteArray,
+        fileName: String
+    ) : super(name, fileName) {
         this.content = fileData
+    }
+
+    constructor(
+        name: String,
+        file: File,
+        fileName: String = file.name
+    ) : super(name, fileName) {
+        this.inputStream = FileInputStream(file)
     }
 }

@@ -172,6 +172,7 @@ object HttpHelper {
         val body: ByteArray? = request.body
 
         var conn: HttpURLConnection? = null
+        var requestStreamFinal: InputStream? = null
         try {
             val connection = URL(url).openConnection() as HttpURLConnection
             conn = connection
@@ -190,14 +191,16 @@ object HttpHelper {
                 connection.setRequestProperty(it.key, it.value)
             }
 
-            val doOutput = if (request.inputStream != null) {
+            val requestStream = request.inputStream
+            requestStreamFinal = requestStream
+            val doOutput = if (requestStream != null) {
                 true
             } else {
                 body != null && body.isNotEmpty()
             }
             val chunkLength = if (request.chunkLength > 0) {
                 request.chunkLength
-            } else if (request.inputStream != null) {
+            } else if (requestStream != null) {
                 4096
             } else {
                 -1
@@ -212,8 +215,8 @@ object HttpHelper {
             }
             connection.connect()
             if (doOutput) {
-                if (request.inputStream != null) {
-                    write(connection.outputStream, request.inputStream, chunkLength)
+                if (requestStream != null) {
+                    write(connection.outputStream, requestStream, chunkLength)
                 } else {
                     connection.outputStream.write(body!!)
                 }
@@ -247,6 +250,10 @@ object HttpHelper {
             return HttpResponse(errorCode, "Error", emptyMap(), errorBody, e)
         } finally {
             conn?.disconnect()
+            try {
+                requestStreamFinal?.close()
+            } catch (ignore: Exception) {
+            }
         }
     }
 

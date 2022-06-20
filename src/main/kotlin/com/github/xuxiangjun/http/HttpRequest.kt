@@ -9,7 +9,7 @@ open class HttpRequest : HttpEntity {
 
     val url: String
     private var innerBody: ByteArray?
-    val inputStream: InputStream?
+    private var innerStream: InputStream?
 
     var chunkLength = -1
     var connectTimeout = -1
@@ -20,41 +20,60 @@ open class HttpRequest : HttpEntity {
             return innerBody
         }
         set(value) {
-            if (inputStream != null) {
-                throw IllegalArgumentException("inputStream has been set")
-            }
             innerBody = value
+            innerStream = null
+        }
+
+    open var inputStream: InputStream?
+        get() {
+            return innerStream
+        }
+        set(value) {
+            innerStream = value
+            innerBody = null
         }
 
     constructor(url: String, body: ByteArray? = null) {
         this.url = url
         this.innerBody = body
-        this.inputStream = null
+        this.innerStream = null
     }
 
     constructor(url: String, inputStream: InputStream) {
         this.url = url
         this.innerBody = null
-        this.inputStream = inputStream
+        this.innerStream = inputStream
     }
 
-    fun addParameter(name: String, value: String) {
+    fun setParameter(name: String, value: String) {
         this.parameters[name] = value
     }
 
-    fun addParameters(vararg params: Pair<String, String>) {
+    fun setParameters(vararg params: Pair<String, String>) {
         for (p in params) {
             this.parameters[p.first] = p.second
         }
     }
 
-    fun addHeader(name: String, value: String) {
+    fun setParameters(params: Map<String, String>) {
+        for (entry in params) {
+            this.parameters[entry.key] = entry.value
+        }
+    }
+
+    fun setHeader(name: String, value: String) {
         this.headers[name] = value
     }
 
-    fun addHeaders(vararg headers: Pair<String, String>) {
+    fun setHeaders(vararg headers: Pair<String, String>) {
         for (h in headers) {
             this.headers[h.first] = h.second
+        }
+    }
+
+    fun setHeaders(headers: Map<String, String>) {
+        for (entry in headers) {
+            this.headers[entry.key] = entry.value
         }
     }
 
