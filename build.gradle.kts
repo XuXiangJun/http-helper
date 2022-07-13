@@ -1,12 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.10"
     id("maven-publish")
 }
 
-val kotlinVersion = "1.6.21"
+val kotlinVersion = "1.7.10"
 
 val libGroup = "com.github.XuXiangJun"
-val libVersion = "1.3.0"
+val libVersion = "1.4.0"
 
 group = libGroup
 version = libVersion
