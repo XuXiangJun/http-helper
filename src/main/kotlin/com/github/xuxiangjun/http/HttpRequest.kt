@@ -1,6 +1,7 @@
 package com.github.xuxiangjun.http
 
 import java.io.InputStream
+import java.net.URL
 import java.net.URLEncoder
 
 open class HttpRequest : HttpEntity {
@@ -78,24 +79,26 @@ open class HttpRequest : HttpEntity {
     }
 
     fun getEncodedUrl(charset: String = "UTF-8"): String {
-        val paramsStr = parameters.run {
-            val builder = StringBuilder()
-            var index = 0
-            forEach {
-                if (index == 0) {
-                    builder.append("?")
-                }
-                builder.append(URLEncoder.encode(it.key, charset))
-                builder.append("=")
-                builder.append(URLEncoder.encode(it.value, charset))
-                if (index < size - 1) {
-                    builder.append("&")
-                }
-                ++index
+        val builder = StringBuilder(url)
+        val jUrl = URL(url)
+        if (parameters.isNotEmpty()) {
+            if (jUrl.query == null) {
+                builder.append("?")
+            } else if (jUrl.query.isNotEmpty()) {
+                builder.append("&")
             }
-            builder.toString()
+        }
+        var index = 0
+        for ((key, value) in parameters) {
+            builder.append(URLEncoder.encode(key, charset))
+            builder.append("=")
+            builder.append(URLEncoder.encode(value, charset))
+            if (index < parameters.size - 1) {
+                builder.append("&")
+            }
+            ++index
         }
 
-        return "$url$paramsStr"
+        return builder.toString()
     }
 }
