@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.9.22"
     id("maven-publish")
 }
 
-val kotlinVersion = "1.7.10"
+val kotlinVersion = "1.9.22"
 
 val libGroup = "com.github.XuXiangJun"
 val libVersion = "1.4.0"
@@ -19,11 +19,14 @@ tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://jitpack.io") }
+    maven("https://jitpack.io")
 }
 
 dependencies {
